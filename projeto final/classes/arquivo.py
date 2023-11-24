@@ -14,7 +14,7 @@ class Arquivo:
         self.__operation = operation
         self.__encoding = encoding
 
-    # operações dos arquivos
+
     def abrir_arquivo(self):
         return open(self.__name_file, self.__operation, encoding=self.__encoding)
 
