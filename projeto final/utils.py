@@ -3,12 +3,13 @@ from classes.carro import Carro
 
 
 def registrar_carro():
+    id = contar_cadastro() + 1
     marca = input('insira a marca: ')
     modelo = input('insila o modelo: ')
     ano = int(input('insira o modelo: '))
     cor = input('insira a cor do veículo: ')
     preco = float(input('insira o preço: '))
-    car = Carro(marca, modelo, ano, cor, preco)
+    car = Carro(id,marca, modelo, ano, cor, preco)
     
     try:
         a = Arquivo('cadastro.txt', 'a')
@@ -27,17 +28,17 @@ def registrar_carro():
 
 def verfica_existe_arquivo(arquivo: str) -> bool:
     try:
-        a = open('agenda.txt','r', encoding='utf-8')
+        a = open('cadastro.txt','r', encoding='utf-8')
         a.close()
         return True
     except FileNotFoundError:
-        print(f'Arquivo {arquivo} não existe :/')
+        print(f'Arquivo {arquivo} não existe')
         return False
 
-def contar_registro() -> int:
+def contar_cadastro() -> int:
     if verfica_existe_arquivo('cadastro.txt'):
         num_cadastros = 0
-        with(open('agenda.txt', 'r', encoding='utf-8')) as cadastro:
+        with(open('cadastro.txt', 'r', encoding='utf-8')) as cadastro:
             linhas = cadastro.readlines()
 
         for _ in linhas:
@@ -45,5 +46,27 @@ def contar_registro() -> int:
 
         return num_cadastros
     else:
-        print('\t\tNão existem contatos ...')
+        print('\t\tNão existem cadastros ...')
         return 0
+
+def listar_registro():
+    lista = open('cadastro.txt', 'r', encoding='utf-8')
+    if contar_cadastro() > 0:
+        print('\n\t\t Listar carros:')
+        for carro in lista:
+            exibe_registro(carro)
+    else:
+        print('\t\t NÃO EXISTEM CARROS REGISTRADOS')
+    lista.close()
+         
+def exibe_registro(registro):
+    print(
+        f'Id:{registro.split(";")[0]}'
+        f'Marca: {registro.split(";")[1]}'
+        f'Modelo: {registro.split(";")[2]}'
+        f'ano: {registro.split(";")[3]}'
+        f'cor: {registro.split(";")[4]}'
+        f'preco: {registro.split(";")[5]}'
+        )
+
+# def deletar_registro():
