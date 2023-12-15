@@ -1,5 +1,5 @@
 class Carro:
-    def __init__(self, id:int, marca:str, modelo:str, ano:int, cor:str, preco:float):
+    def __init__(self, id:int, marca:str, modelo:str, ano:int, cor:str, preco:float,):
         
         self.__id = id
         self.__marca = marca
@@ -7,7 +7,9 @@ class Carro:
         self.__ano = ano
         self.__cor = cor
         self.__preco = preco
-    
+
+        
+
     def get_id(self):
         return self.__id
     def set_id(self, id):
