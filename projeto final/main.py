@@ -4,7 +4,7 @@ from utils import listar_registro
 from utils import deletar_registro
 from utils import atualizar_registro
 from utils import resetar_arquivo
-from utils import calcula_parcela
+from utils import simula_venda
 
 def menu():
     while True:
@@ -47,7 +47,7 @@ def menu():
         elif opcao == '5':
             resetar_arquivo()
         elif opcao == '6':
-            calcula_parcela()
+            simula_venda()
         elif opcao == '0':
             break
         else:

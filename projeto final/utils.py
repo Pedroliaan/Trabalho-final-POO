@@ -1,6 +1,6 @@
 from classes.arquivo import Arquivo
 from classes.carro import Carro
-from classes.venda import Venda
+from classes.operacao import Venda
 
 
 def registrar_carro():
@@ -145,20 +145,18 @@ def resetar_arquivo():
     else:
         print(f'\t\tArquivo deletado com sucesso')
 
-def calcula_parcela(id):
+def calcula_parcela(id, parcelas):
     try:
         a = open('cadastro.txt', 'r', encoding='utf-8')
         linhas = a.readlines()
+
         for x in len(linhas):
             if linhas[x].startswith(id):
                 new = [linhas[x]]
-                new.split(';')
-                if new[6] > 100000:
-                    return f'80x de {float(new[6])/80}'
-                elif new[6] > 1000000:
-                    return f'120x de {float(new[6])/120}'
-                else:
-                    return f'32x de {float(new[6])/32}'
+                view = [new[0].split(';')]
+                v = view[0][5].strip('\n')
+                return f'{parcelas}x de {float(v)/parcelas}'
+            
             else:
                 pass
         a.close()
@@ -180,17 +178,18 @@ def contar_operacoes():
 def calcula_valor(id):
     a = open('cadastro.txt', 'r', encoding='utf-8')
     linhas = a.readlines()
-    for x in len(linhas):
+    for x in range(len(linhas)):
         if linhas[x].startswith(id):
             new = [linhas[x]]
-            new.split(';')
-            return(new[6])
+            view = [new[0].split(';')]
+            v = view[0][5].strip('\n')
+            return float(v)
         else:
             pass
-def seleciona_carro(id):
+def seleciona_carro(id:str):
     a = open('cadastro.txt', 'r', encoding='utf-8')
     linhas = a.readlines()
-    for x in len(linhas):
+    for x in range(len(linhas)):
         if linhas[x].startswith(id):
             new = [linhas[x]]
             return new[0]
@@ -198,11 +197,26 @@ def seleciona_carro(id):
             pass
 def simula_venda():
     listar_registro()
-    i = int(input('Insira o id do carro que você deseja simular a venda:'))
-    calcula_parcela(i)
+    i = input('Insira o id do carro que você deseja simular a venda:')
+    p = int(input('insira a quantidade dae parcelas que você deseja:'))
     id = contar_operacoes() + 1
     valor = calcula_valor(i)
-    parcelas = calcula_parcela(i)
+    parcelas = calcula_parcela(i,p)
     carro = seleciona_carro(i)
     v = Venda(id,valor,parcelas,carro)    
     
+    try:
+        a = Arquivo('operacoes.txt', 'a')
+        registro = a.abrir_arquivo()
+        operacao = (f'{v.get_id_operacao()};{v.get_valor()}; {v.get_parcelas()};' 
+                    f'{v.get_carro()}\n')
+        registro.write(operacao)
+        a.fechar_arquivo(registro)
+    except FileNotFoundError: 
+        print("arquivo não encontrado")
+    except IOError:
+        print('houve um problema na entrada dos dados')
+    except Exception:
+        ("ERRO!")
+    else:
+        pass
