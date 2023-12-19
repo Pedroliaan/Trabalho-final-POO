@@ -1,5 +1,6 @@
 from classes.arquivo import Arquivo
 from classes.carro import Carro
+from classes.venda import Venda
 
 
 def registrar_carro():
@@ -143,3 +144,65 @@ def resetar_arquivo():
         print(f'Um erro ocorreu')
     else:
         print(f'\t\tArquivo deletado com sucesso')
+
+def calcula_parcela(id):
+    try:
+        a = open('cadastro.txt', 'r', encoding='utf-8')
+        linhas = a.readlines()
+        for x in len(linhas):
+            if linhas[x].startswith(id):
+                new = [linhas[x]]
+                new.split(';')
+                if new[6] > 100000:
+                    return f'80x de {float(new[6])/80}'
+                elif new[6] > 1000000:
+                    return f'120x de {float(new[6])/120}'
+                else:
+                    return f'32x de {float(new[6])/32}'
+            else:
+                pass
+        a.close()
+    except Exception:
+        print('erro no calculo de parcelas')
+def contar_operacoes():
+    if verfica_existe_arquivo('operacoes.txt'):
+        num_operacoes = 0
+        with(open('operacoes.txt', 'r', encoding='utf-8')) as operacoes:
+            linhas = operacoes.readlines()
+
+        for _ in linhas:
+            num_operacoes += 1
+
+        return num_operacoes
+    else:
+        print('\t\tNão existem simulações ...')
+        return 0
+def calcula_valor(id):
+    a = open('cadastro.txt', 'r', encoding='utf-8')
+    linhas = a.readlines()
+    for x in len(linhas):
+        if linhas[x].startswith(id):
+            new = [linhas[x]]
+            new.split(';')
+            return(new[6])
+        else:
+            pass
+def seleciona_carro(id):
+    a = open('cadastro.txt', 'r', encoding='utf-8')
+    linhas = a.readlines()
+    for x in len(linhas):
+        if linhas[x].startswith(id):
+            new = [linhas[x]]
+            return new[0]
+        else:
+            pass
+def simula_venda():
+    listar_registro()
+    i = int(input('Insira o id do carro que você deseja simular a venda:'))
+    calcula_parcela(i)
+    id = contar_operacoes() + 1
+    valor = calcula_valor(i)
+    parcelas = calcula_parcela(i)
+    carro = seleciona_carro(i)
+    v = Venda(id,valor,parcelas,carro)    
+    

@@ -1,0 +1,3 @@
+1;fiat; uno;2000; preto; 60000.0
+2;chevrolet; 307;1999; auzl; 70000.0
+3;aaaaaaaaa; bbbbbb;3000; azul; 40000.0

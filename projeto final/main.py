@@ -4,6 +4,7 @@ from utils import listar_registro
 from utils import deletar_registro
 from utils import atualizar_registro
 from utils import resetar_arquivo
+from utils import calcula_parcela
 
 def menu():
     while True:
@@ -45,6 +46,8 @@ def menu():
             atualizar_registro()
         elif opcao == '5':
             resetar_arquivo()
+        elif opcao == '6':
+            calcula_parcela()
         elif opcao == '0':
             break
         else:

@@ -1,5 +1,5 @@
 class Operacao:
-    def __init__(self, id_carro:int, valor:float):
-        self.id_carro = id_carro
+    def __init__(self, id_operacao:int, valor:float, carro:str):
+        self.carro = carro
         self.valor = valor
-        
+        self.id_operacao = id_operacao
