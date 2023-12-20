@@ -1,6 +1,7 @@
 from classes.arquivo import Arquivo
 from classes.carro import Carro
 from classes.operacao import Venda
+from classes.operacao import Aluguel
 
 
 def registrar_carro():
@@ -50,6 +51,10 @@ def contar_cadastro() -> int:
     else:
         print('\t\tNão existem cadastros ...')
         return 0
+
+# def verifica_id():
+#     a = open('cadastro.txt', 'a', encoding='utf-8')
+#     lista = a.readlines()
 
 def listar_registro():
     lista = open('cadastro.txt', 'r', encoding='utf-8')
@@ -145,21 +150,11 @@ def resetar_arquivo():
     else:
         print(f'\t\tArquivo deletado com sucesso')
 
-def calcula_parcela(id, parcelas):
+def calcula_parcela(id:str, parcelas:int):
     try:
-        a = open('cadastro.txt', 'r', encoding='utf-8')
-        linhas = a.readlines()
+       v = calcula_valor(id)
+       return f'{parcelas}x de {v/parcelas}'
 
-        for x in len(linhas):
-            if linhas[x].startswith(id):
-                new = [linhas[x]]
-                view = [new[0].split(';')]
-                v = view[0][5].strip('\n')
-                return f'{parcelas}x de {float(v)/parcelas}'
-            
-            else:
-                pass
-        a.close()
     except Exception:
         print('erro no calculo de parcelas')
 def contar_operacoes():
@@ -198,20 +193,23 @@ def seleciona_carro(id:str):
 def simula_venda():
     listar_registro()
     i = input('Insira o id do carro que você deseja simular a venda:')
-    p = int(input('insira a quantidade dae parcelas que você deseja:'))
+    p = int(input('insira a quantidade das parcelas que você deseja:'))
     id = contar_operacoes() + 1
     valor = calcula_valor(i)
     parcelas = calcula_parcela(i,p)
-    carro = seleciona_carro(i)
-    v = Venda(id,valor,parcelas,carro)    
+    carro = seleciona_carro(i).strip('\n')
+    tipo = 'venda'
+    v = Venda(id,valor,parcelas,carro, tipo)    
     
     try:
         a = Arquivo('operacoes.txt', 'a')
         registro = a.abrir_arquivo()
         operacao = (f'{v.get_id_operacao()};{v.get_valor()}; {v.get_parcelas()};' 
-                    f'{v.get_carro()}\n')
+                    f'{v.get_carro()}; {v.get_tipo()}\n')
         registro.write(operacao)
         a.fechar_arquivo(registro)
+        exibe_venda(operacao)
+        
     except FileNotFoundError: 
         print("arquivo não encontrado")
     except IOError:
@@ -220,3 +218,61 @@ def simula_venda():
         ("ERRO!")
     else:
         pass
+def exibe_venda(lista):
+    print(
+        f' id: {lista.split(";")[0]}'
+        f' valor: {lista.split(";")[1]}'
+        f' parcelas: {lista.split(";")[2]}'
+        f' carro: {lista.split(";")[4]} {lista.split(";")[5]} {lista.split(";")[6]} {lista.split(";")[7]}'
+        f' tipo: {lista.split(";")[9].strip("\n")}'
+    )
+def simula_aluguel():
+    listar_registro()
+    i = input('Insira o id do carro que você deseja simular o aluguel:')
+    p = int(input('insira a quantidade de dias que você deseja alugar:'))
+    id = contar_operacoes() + 1
+    carro = seleciona_carro(i).strip('\n')
+    tipo = 'aluguel'
+    valor = calcula_aluguel(i,p)
+    alu = Aluguel(id,valor,p,carro,tipo)
+    
+    try: 
+        a = Arquivo('operacoes.txt', 'a')
+        registro = a.abrir_arquivo()
+        operacao =(f'{alu.get_id_operacao()};{alu.get_valor()}; {alu.get_dias()};' 
+                    f'{alu.get_carro()}; {alu.get_tipo()}\n')
+        registro.write(operacao)
+        a.fechar_arquivo(registro)
+        exibe_aluguel(operacao)
+        
+    except FileNotFoundError: 
+     print("arquivo não encontrado")
+    except IOError:
+        print('houve um problema na entrada dos dados')
+    except Exception:
+        ("ERRO!")
+    else:
+        pass
+
+def calcula_aluguel(id, dias):
+    try:
+        v = calcula_valor(id)
+        if v > 100000:
+            return f'Alguel de {dias} dias, 35 R$ por dia. total {35*dias}R$'
+        elif v > 500000:
+            return f'Alguel de {dias} dias, 65 R$ por dia. total {65*dias}R$'
+        elif v > 1000000:
+            return f'Alguel de {dias} dias, 150 R$ por dia. total {150*dias}R$'
+        else: 
+            return f'Alguel de {dias} dias, 25 R$ por dia. total {25*dias}R$'
+        
+    except Exception:
+        print("erro no calculo de diarias")
+
+def exibe_aluguel(lista):
+    print(
+    f' id: {lista.split(";")[0]}'
+    f' valor: {lista.split(";")[1]}'
+    f' dias: {lista.split(";")[2]}'
+    f' carro: {lista.split(";")[4]} {lista.split(";")[5]} {lista.split(";")[6]} {lista.split(";")[7]}'
+    f' tipo: {lista.split(";")[9].strip("\n")}')
