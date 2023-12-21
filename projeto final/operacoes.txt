@@ -1,5 +1,0 @@
-
-2;Alguel de 34 dias, 25 R$ por dia. total 850; 34;1;fiat; uno;2000; preto; 60000.0
-; aluguel
-4;Alguel de 34 dias, 25 R$ por dia. total 850; 34;1;fiat; uno;2000; preto; 60000.0; aluguel
-5;Alguel de 2 dias, 25 R$ por dia. total 50R$; 2;1;fiat; uno;2000; preto; 60000.0; aluguel

@@ -5,7 +5,7 @@ from classes.operacao import Aluguel
 
 
 def registrar_carro():
-    id = contar_cadastro() + 1
+    id = verifica_id()
     marca = input('insira a marca: ')
     modelo = input('insila o modelo: ')
     ano = int(input('insira o ano: '))
@@ -28,7 +28,7 @@ def registrar_carro():
         ("ERRO!")
     else:
         print('Carro registrado com sucesso!')
-
+          
 def verfica_existe_arquivo(arquivo: str) -> bool:
     try:
         a = open('cadastro.txt','r', encoding='utf-8')
@@ -52,10 +52,16 @@ def contar_cadastro() -> int:
         print('\t\tNão existem cadastros ...')
         return 0
 
-# def verifica_id():
-#     a = open('cadastro.txt', 'a', encoding='utf-8')
-#     lista = a.readlines()
-
+def verifica_id():
+    if contar_cadastro() > 0:
+        a = open('cadastro.txt', 'r', encoding='utf-8')
+        lista = a.readlines()
+        aux = lista[-1]
+        id_ant = aux.split(';')[0]
+        return int(id_ant) + 1
+    else:
+         return 1 
+    
 def listar_registro():
     lista = open('cadastro.txt', 'r', encoding='utf-8')
     if contar_cadastro() > 0:
@@ -192,12 +198,13 @@ def seleciona_carro(id:str):
             pass
 def simula_venda():
     listar_registro()
-    i = input('Insira o id do carro que você deseja simular a venda:')
+    i = input('Insira o id do carro que você deseja vender:')
     p = int(input('insira a quantidade das parcelas que você deseja:'))
     id = contar_operacoes() + 1
     valor = calcula_valor(i)
     parcelas = calcula_parcela(i,p)
-    carro = seleciona_carro(i).strip('\n')
+    car = seleciona_carro(i).strip('\n')
+    carro = car.strip('\n')
     tipo = 'venda'
     v = Venda(id,valor,parcelas,carro, tipo)    
     
@@ -208,8 +215,8 @@ def simula_venda():
                     f'{v.get_carro()}; {v.get_tipo()}\n')
         registro.write(operacao)
         a.fechar_arquivo(registro)
-        exibe_venda(operacao)
-        
+        exibe_operacao(operacao)
+        deletar_registro(i)
     except FileNotFoundError: 
         print("arquivo não encontrado")
     except IOError:
@@ -218,14 +225,7 @@ def simula_venda():
         ("ERRO!")
     else:
         pass
-def exibe_venda(lista):
-    print(
-        f' id: {lista.split(";")[0]}'
-        f' valor: {lista.split(";")[1]}'
-        f' parcelas: {lista.split(";")[2]}'
-        f' carro: {lista.split(";")[4]} {lista.split(";")[5]} {lista.split(";")[6]} {lista.split(";")[7]}'
-        f' tipo: {lista.split(";")[9].strip("\n")}'
-    )
+    
 def simula_aluguel():
     listar_registro()
     i = input('Insira o id do carro que você deseja simular o aluguel:')
@@ -243,7 +243,7 @@ def simula_aluguel():
                     f'{alu.get_carro()}; {alu.get_tipo()}\n')
         registro.write(operacao)
         a.fechar_arquivo(registro)
-        exibe_aluguel(operacao)
+        exibe_operacao(operacao)
         
     except FileNotFoundError: 
      print("arquivo não encontrado")
@@ -258,21 +258,41 @@ def calcula_aluguel(id, dias):
     try:
         v = calcula_valor(id)
         if v > 100000:
-            return f'Alguel de {dias} dias, 35 R$ por dia. total {35*dias}R$'
+            return f'Aluguel de {dias} dias, 35 R$ por dia. total {35*dias}R$'
         elif v > 500000:
-            return f'Alguel de {dias} dias, 65 R$ por dia. total {65*dias}R$'
+            return f'Aluguel de {dias} dias, 65 R$ por dia. total {65*dias}R$'
         elif v > 1000000:
-            return f'Alguel de {dias} dias, 150 R$ por dia. total {150*dias}R$'
+            return f'Aluguel de {dias} dias, 150 R$ por dia. total {150*dias}R$'
         else: 
-            return f'Alguel de {dias} dias, 25 R$ por dia. total {25*dias}R$'
+            return f'Aluguel de {dias} dias, 25 R$ por dia. total {25*dias}R$'
         
     except Exception:
         print("erro no calculo de diarias")
 
-def exibe_aluguel(lista):
-    print(
-    f' id: {lista.split(";")[0]}'
-    f' valor: {lista.split(";")[1]}'
-    f' dias: {lista.split(";")[2]}'
-    f' carro: {lista.split(";")[4]} {lista.split(";")[5]} {lista.split(";")[6]} {lista.split(";")[7]}'
-    f' tipo: {lista.split(";")[9].strip("\n")}')
+def exibe_operacao(lista):
+    tip = lista.split(";")[9].strip("\n")
+    if tip == ' aluguel':
+        print(
+        f' id: {lista.split(";")[0]}'
+        f' valor: {lista.split(";")[1]}'
+        f' dias: {lista.split(";")[2]}'
+        f' carro: {lista.split(";")[4]} {lista.split(";")[5]} {lista.split(";")[6]} {lista.split(";")[7]}'
+        f' tipo: {tip}')
+    elif tip == " venda":
+        print(
+        f' id: {lista.split(";")[0]}'
+        f' valor: {lista.split(";")[1]}'
+        f' parcelas: {lista.split(";")[2]}'
+        f' carro: {lista.split(";")[4]} {lista.split(";")[5]} {lista.split(";")[6]} {lista.split(";")[7]}'
+        f' tipo: {tip}'
+        )
+    
+def listar_operacoes():
+    lista = open('operacoes.txt', 'r', encoding='utf-8')
+    if contar_operacoes() > 0:
+        print('\n\t\t Listar operações: ')
+        for operacao in lista:
+            exibe_operacao(operacao)
+    else:
+        print("\t\t NÃO EXISTEM OPERACOES CADASTRADOS")
+    lista.close()

@@ -6,7 +6,7 @@ from utils import atualizar_registro
 from utils import resetar_arquivo
 from utils import simula_venda
 from utils import simula_aluguel
-
+from utils import listar_operacoes
 
 def menu():
     while True:
@@ -31,10 +31,11 @@ def menu():
         MENU
         CARROS CADASTRADOS: {contar_cadastro()}
 
-        [1] CADASTRAR CARRO       \t[4] ATUALIZAR REGISTRO
-        [2] LISTAR CARROS          \t[5] RESETAR ARQUIVO
-        [3] DELETAR REGISTRO DO CARRO   [6]SIMULAR VENDA
-        [0] SAIR    \t\t\t[7]SIMULAR ALUGUEL
+        [1] CADASTRAR CARRO       \t[5] RESETAR ARQUIVO
+        [2] LISTAR CARROS          \t[6]REALIZAR VENDA
+        [3] DELETAR REGISTRO DO CARRO   [7]SIMULAR ALUGUEL
+        [4] ATUALIZAR REGISTRO \t\t[8]LISTAR OPERACOES
+        [0] SAIR
         {'=' * 64}
 
         ESCOLHA UMA OPÇÃO: ''')
@@ -53,6 +54,8 @@ def menu():
             simula_venda()
         elif opcao == '7':
             simula_aluguel()
+        elif opcao == '8':
+            listar_operacoes()
         elif opcao == '0':
             break
         else:
